@@ -17,11 +17,16 @@ using asio::ip::tcp;
 int main(int argc, char* argv[])
 {
     try {
+        if (argc != 2) {
+            std::cerr << "Usage: daytime_client <host>\n";
+            return 1;
+        }
+
         asio::io_context io_context;
 
         std::error_code ec;
 
-        asio::ip::tcp::endpoint endpoints(asio::ip::make_address("3.2.12.23", ec), 1300);
+        asio::ip::tcp::endpoint endpoints(asio::ip::make_address(argv[1], ec), 1300);
 
         tcp::socket socket(io_context);
 
