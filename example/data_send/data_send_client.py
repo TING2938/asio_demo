@@ -11,10 +11,10 @@ plt.ion()
 time, value = [], []
 
 while True:
-    data = sock.recv(160)
+    data = sock.recv(16)
     data = struct.unpack("=qd", data)
     print(data)
     value.append(data[1])
     time.append(data[0])
     plt.plot(time, value, "--or")
-    plt.pause(0.0001)
+    plt.pause(0.1)
