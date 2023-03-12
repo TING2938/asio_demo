@@ -27,20 +27,20 @@ public:
 
     void push(const Message& data)
     {
-        std::unique_lock<std::mutex> lock(mtx_);
-        while (q_.size() >= max_size_) {
-            q_.pop_front();
+        {
+            std::unique_lock<std::mutex> lock(mtx_);
+            while (q_.size() >= max_size_) {
+                q_.pop_front();
+            }
+            q_.push_back(data);
         }
-        q_.push_back(data);
         cdv_.notify_one();
     }
 
     Message pop()
     {
         std::unique_lock<std::mutex> lock(mtx_);
-        while (q_.empty()) {
-            cdv_.wait(lock);
-        }
+        cdv_.wait(lock, [this] { return !q_.empty(); });
         auto ret = std::move(q_.front());
         q_.pop_front();
         return ret;
