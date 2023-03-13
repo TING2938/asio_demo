@@ -26,9 +26,9 @@ public:
 
     void start()
     {
-        auto& msg = msg_queue_.pop();
+        auto msg = msg_queue_.pop();
 
-        auto self = shared_from_this();
+        auto self = this->shared_from_this();
         asio::async_write(socket_, asio::buffer(&msg, sizeof(msg)),
                           [this, self](const std::error_code& error, size_t bytes) {
                               if (!error) {
